@@ -35,6 +35,20 @@ def main(args):
     model.save(model_save_path)
     print(f"Model saved to {model_save_path}")
 
+    # Save training history to output/training_log.txt
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    history_path = os.path.join(output_dir, "training_log.txt")
+    with open(history_path, "w") as f:
+        f.write("Epoch,Loss,Accuracy,Val_Loss,Val_Accuracy\n")
+        for epoch in range(len(history.history['loss'])):
+            f.write(f"{epoch+1},"
+                    f"{history.history['loss'][epoch]:.4f},"
+                    f"{history.history['accuracy'][epoch]:.4f},"
+                    f"{history.history['val_loss'][epoch]:.4f},"
+                    f"{history.history['val_accuracy'][epoch]:.4f}\n")
+    print(f"Training history saved to {history_path}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a Crop Stress Detection model.")
     parser.add_argument("--data_dir", type=str, default="22BCE10679_SumitVerma_CropStressDetection/data/images/Dataset", help="Base directory containing train/val/test image data subdirectories.")
